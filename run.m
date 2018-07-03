@@ -1,0 +1,22 @@
+clear all
+global StM;
+global M_;
+global rec_pvar;
+rec_pvar = zeros(0,6);
+m = 40000;
+xc = -0.9;  yc = 0; zc = 0;
+Jx = 289.3; Jy = 6771.8; Jz = 6771.8;
+lmd = [0,0,0,0,0,0;0,34777.43,0,0,0,5361.523;0,0,34777.43,0,-5361.523,0;0,0,0,0,0,0;0,0,0,0,86129.22,0;0,0,0,0,0,86129.22];
+M11 = diag([m+lmd(1,1) m+lmd(2,2) m+lmd(3,3)]);
+M12 = [0 m*zc -m*yc;-m*zc 0 m*xc+lmd(2,6);m*yc -m*xc+lmd(3,5) 0];
+M21 = M12';
+M22 = diag([Jx+lmd(4,4) Jy+lmd(5,5) Jz+lmd(6,6)]);
+M_ = [M11,M12;
+     M21,M22];
+Cye = 1.467; Czr= -1.467; mxr = 0; mxd = -0.022; myr = -0.615; mze= -0.615;
+Mb = 100*[0,0,0;Cye,0,0;0,Czr,0;0,mxr,mxd;0,myr,0;mze,0,0];
+tempM = M_\Mb;
+StM = tempM(4:6,:);
+%StM = Mb(4:6,:);
+%sim('random');
+simout = sim('test');
